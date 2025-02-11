@@ -22,7 +22,8 @@ public class FollowPlayer : MonoBehaviour
         float playerX = player.transform.position.x;
         float playerY = player.transform.position.y;
         float dist = Vector2.Distance(new Vector2(camX,camY), new Vector2(playerX,playerY));
-        float step = defaultSpd * Time.deltaTime * Mathf.Log10(dist);
+        float step = defaultSpd * Time.deltaTime * dist;
+
         Vector3 target = new Vector3(playerX,playerY+OriginalOffset.y,this.transform.position.z);
         this.transform.position = Vector3.MoveTowards(this.transform.position, target, step);
     }
