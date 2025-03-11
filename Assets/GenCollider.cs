@@ -20,6 +20,10 @@ public class GenCollider : MonoBehaviour
         return collisionCount>0;
     }
 
+    public int returnColNum(){
+        return collisionCount;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag!="Player"){

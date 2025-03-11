@@ -24,7 +24,8 @@ public class HeroKnight : MonoBehaviour {
     private float               m_delayToIdle = 0.0f;
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
-
+    
+    public GameObject[] slash;
 
     public HudManager hud;
     public int health = 10;
@@ -123,8 +124,10 @@ public class HeroKnight : MonoBehaviour {
                     if (m_timeSinceAttack > 1.0f)
                         m_currentAttack = 1;
 
+                    slash[m_currentAttack-1].SetActive(true);
                     // Call one of three attack animations "Attack1", "Attack2", "Attack3"
                     m_animator.SetTrigger("Attack" + m_currentAttack);
+                    slash[m_currentAttack-1].SetActive(false);
 
                     // Reset timer
                     m_timeSinceAttack = 0.0f;
@@ -148,7 +151,7 @@ public class HeroKnight : MonoBehaviour {
                     m_delayToIdle -= Time.deltaTime;
                         if(m_delayToIdle < 0)
                             m_animator.SetInteger("AnimState", 0);
-            }
+                }
             }
             //Idle
             else{

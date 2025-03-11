@@ -11,6 +11,7 @@ public class EnemyAI : MonoBehaviour
     private GenCollider colliderTRight;
     private int facing;
     private bool Turn = false;
+    private bool Turned = false;
     public float spd = 4.0f;
 
     // Start is called before the first frame update
@@ -31,17 +32,21 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (colliderBRight.returnColliding()!=colliderBLeft.returnColliding()){
-            Debug.Log("Bottom");
-            Turn = true;
-        } else if (colliderTRight.returnColliding()!=colliderTLeft.returnColliding()) {
-            Debug.Log("Top");
-            Turn = true;
+        if (Turned){
+            Turned = colliderBRight.returnColliding()!=colliderBLeft.returnColliding();
         } else {
-            Turn = false;
+            if (colliderBRight.returnColliding()!=colliderBLeft.returnColliding()){
+                //Debug.Log("Bottom");
+                Turn = true;
+            } else if (colliderTRight.returnColliding()!=colliderTLeft.returnColliding()) {
+                //Debug.Log("Top");
+                Turn = true;
+            }
         }
         if (Turn){
             facing*=-1;
+            Turn = false;
+            Turned = true;
         }
         self.velocity = new Vector2(facing * spd, self.velocity.y);
     }
