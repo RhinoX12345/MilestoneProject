@@ -25,7 +25,9 @@ public class HeroKnight : MonoBehaviour {
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
     
-    public GameObject[] slash;
+    private Wpn_Attack slash1;
+    private Wpn_Attack slash2;
+    private Wpn_Attack slash3;
 
     public HudManager hud;
     public int health = 10;
@@ -43,6 +45,9 @@ public class HeroKnight : MonoBehaviour {
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
+        slash1 = transform.Find("Slash_1").GetComponent<Wpn_Attack>();
+        slash2 = transform.Find("Slash_2").GetComponent<Wpn_Attack>();
+        slash3 = transform.Find("Slash_3").GetComponent<Wpn_Attack>();
     }
 
     // Update is called once per frame
@@ -123,11 +128,13 @@ public class HeroKnight : MonoBehaviour {
                     // Reset Attack combo if time since last attack is too large
                     if (m_timeSinceAttack > 1.0f)
                         m_currentAttack = 1;
-
-                    slash[m_currentAttack-1].SetActive(true);
+                    switch (m_currentAttack){
+                        case 1:slash1.attack(m_facingDirection);break;
+                        case 2:slash2.attack(m_facingDirection);break;
+                        case 3:slash3.attack(m_facingDirection);break;
+                    }
                     // Call one of three attack animations "Attack1", "Attack2", "Attack3"
                     m_animator.SetTrigger("Attack" + m_currentAttack);
-                    slash[m_currentAttack-1].SetActive(false);
 
                     // Reset timer
                     m_timeSinceAttack = 0.0f;

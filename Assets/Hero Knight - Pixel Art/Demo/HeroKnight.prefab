@@ -70,6 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4689175380946379667}
   - component: {fileID: 5029082805359261013}
+  - component: {fileID: 2318084196075289991}
   m_Layer: 0
   m_Name: Slash_2
   m_TagString: Player
@@ -85,7 +86,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751312346110850937}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.37, y: 0.77, z: 0}
+  m_LocalPosition: {x: 0, y: 0.77, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
@@ -101,7 +102,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -117,14 +118,27 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0.16307616, y: 0.5678971}
-      - {x: 0.019868016, y: 0.55551004}
-      - {x: 0.025850296, y: -0.37782955}
-      - {x: 0.44097996, y: -0.38117123}
-      - {x: 1.1275597, y: -0.25783157}
-      - {x: 1.6755049, y: -0.05813092}
-      - {x: 1.8511248, y: 0.11208153}
-      - {x: 1.7015882, y: 0.32746452}
-      - {x: 1.2195373, y: 0.51492083}
+      - {x: -0.4155783, y: 0.58112454}
+      - {x: -0.40959603, y: -0.41625136}
+      - {x: 0.13360608, y: -0.4067856}
+      - {x: 0.9610655, y: -0.20660263}
+      - {x: 1.316902, y: -0.07093817}
+      - {x: 1.5053291, y: 0.11208159}
+      - {x: 1.3685998, y: 0.25062102}
+      - {x: 1.0274286, y: 0.46369183}
+--- !u!114 &2318084196075289991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751312346110850937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf27585d143b8048a9214bc23308d98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  atkDur: 0.25
 --- !u!1 &2523449860665602889
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,6 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9184973761840278646}
   - component: {fileID: 7064201857743900698}
+  - component: {fileID: 485955177185431814}
   m_Layer: 0
   m_Name: Slash_1
   m_TagString: Player
@@ -150,7 +165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2523449860665602889}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.47, y: 0.77, z: 0}
+  m_LocalPosition: {x: 0, y: 0.77, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
@@ -166,7 +181,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -181,14 +196,29 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.038469315, y: 0.81318104}
+    - - {x: -0.3713625, y: 0.8772173}
+      - {x: -0.33263814, y: -0.42775905}
       - {x: 0.07747555, y: -0.45015907}
-      - {x: 1.2740898, y: -0.41073704}
-      - {x: 1.6354136, y: -0.32604933}
-      - {x: 1.9533863, y: -0.0737257}
-      - {x: 1.981152, y: 0.20910996}
-      - {x: 1.7254274, y: 0.48935777}
-      - {x: 1.1063161, y: 0.80419123}
+      - {x: 0.67214924, y: -0.4363516}
+      - {x: 1.0462805, y: -0.3772784}
+      - {x: 1.31615, y: -0.23213953}
+      - {x: 1.4410964, y: -0.11214745}
+      - {x: 1.4816695, y: 0.26033896}
+      - {x: 1.2259448, y: 0.51497227}
+      - {x: 0.61964077, y: 0.7913841}
+--- !u!114 &485955177185431814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2523449860665602889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf27585d143b8048a9214bc23308d98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  atkDur: 0.25
 --- !u!1 &6323719953710832613
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,8 +590,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1201762746068085584}
   - component: {fileID: 9178605104151833064}
+  - component: {fileID: 5213309773227123897}
   m_Layer: 0
-  m_Name: Slash_ 3
+  m_Name: Slash_3
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -575,7 +606,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8878113593590383951}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.44, y: 0.89, z: 0}
+  m_LocalPosition: {x: 0, y: 0.77, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
@@ -591,7 +622,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -606,14 +637,27 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.14396656, y: 0.7010648}
-      - {x: 0.15521228, y: 0.6957382}
-      - {x: 0.26823282, y: -0.7992449}
-      - {x: 1.569684, y: -0.85290813}
-      - {x: 1.8896246, y: -0.5711298}
-      - {x: 2.00465, y: -0.113814235}
-      - {x: 1.8043041, y: 0.33850098}
-      - {x: 1.1983576, y: 0.6499392}
+    - - {x: 0.14396656, y: 0.84194446}
+      - {x: -0.33146304, y: 0.7981961}
+      - {x: -0.23124972, y: -0.58152175}
+      - {x: 1.2751175, y: -0.59676325}
+      - {x: 1.5310218, y: -0.25094867}
+      - {x: 1.5179749, y: 0.1551379}
+      - {x: 1.3176287, y: 0.49218786}
+      - {x: 0.7757184, y: 0.7267827}
+--- !u!114 &5213309773227123897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8878113593590383951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf27585d143b8048a9214bc23308d98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  atkDur: 0.25
 --- !u!1 &9013660374251658338
 GameObject:
   m_ObjectHideFlags: 0
