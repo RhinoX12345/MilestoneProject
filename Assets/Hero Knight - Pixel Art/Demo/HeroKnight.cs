@@ -31,9 +31,11 @@ public class HeroKnight : MonoBehaviour {
 
     public HudManager hud;
     public int health = 10;
+    private bool died = false;
     private bool invincible = false;
     public float invincibleTime = 1.0f;
     public bool controlEnabled = true;
+    public Vector2 lastCheckpointPos = new Vector2(0,0);
 
     // Use this for initialization
     void Start ()
@@ -53,6 +55,13 @@ public class HeroKnight : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
+        hud.updateHealth();
+        if (health <= 0){
+            controlEnabled = false;
+            died = true;
+        }
+        
+
         // Increase timer that controls attack combo
         m_timeSinceAttack += Time.deltaTime;
         // Increase timer that checks roll duration
@@ -61,96 +70,105 @@ public class HeroKnight : MonoBehaviour {
         // Disable rolling if timer extends duration
         if(m_rollCurrentTime > m_rollDuration)
             m_rolling = false;
-        //Check if character just landed on the ground
-        if (!m_grounded && m_groundSensor.State())
-        {
-            m_grounded = true;
-            m_animator.SetBool("Grounded", m_grounded);
-        }
-        //Check if character just started falling
-        if (m_grounded && !m_groundSensor.State())
-        {
-            m_grounded = false;
-            m_animator.SetBool("Grounded", m_grounded);
-        }
-
-        //Wall Slide
-        m_isWallSliding = (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State());
-        m_animator.SetBool("WallSlide", m_isWallSliding);
-        //Set AirSpeed in animator
-        m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
-        
-
-        //Hurt
-        if (Input.GetKeyDown("q") && !m_rolling){
-            damage(1);
-        }
-
-        // -- Handle input and movement --
-        
-        if (controlEnabled){
-            // Swap direction of sprite depending on walk direction
-            float inputX = Input.GetAxis("Horizontal");
-            if (inputX > 0){
-                GetComponent<SpriteRenderer>().flipX = false;
-                m_facingDirection = 1;
-            }else if (inputX < 0){
-                GetComponent<SpriteRenderer>().flipX = true;
-                m_facingDirection = -1;
+        if (!died){
+            //Check if character just landed on the ground
+            if (!m_grounded && m_groundSensor.State())
+            {
+                m_grounded = true;
+                m_animator.SetBool("Grounded", m_grounded);
             }
-            // Move
-            if (!m_rolling){
-                m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
-                // Roll
-                if (Input.GetKeyDown("left shift") && !m_isWallSliding)
-                {
-                    m_rolling = true;
-                    m_animator.SetTrigger("Roll");
-                    m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
-                }
-                //Jump
-                else if (Input.GetKeyDown("space") && m_grounded){
-                    m_animator.SetTrigger("Jump");
-                    m_grounded = false;
-                    m_animator.SetBool("Grounded", m_grounded);
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
-                    m_groundSensor.Disable(0.2f);
-                }
-                //Attack
-                else if(Input.GetMouseButtonDown(0) && m_timeSinceAttack > 0.25f)
-                {
-                    m_currentAttack++;
+            //Check if character just started falling
+            if (m_grounded && !m_groundSensor.State())
+            {
+                m_grounded = false;
+                m_animator.SetBool("Grounded", m_grounded);
+            }
 
-                    // Loop back to one after third attack
-                    if (m_currentAttack > 3)
-                        m_currentAttack = 1;
+            //Set AirSpeed in animator
+            m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
+            //Wall Slide
+            m_isWallSliding = (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State());
+            m_animator.SetBool("WallSlide", m_isWallSliding);
+            
 
-                    // Reset Attack combo if time since last attack is too large
-                    if (m_timeSinceAttack > 1.0f)
-                        m_currentAttack = 1;
-                    switch (m_currentAttack){
-                        case 1:slash1.attack(m_facingDirection);break;
-                        case 2:slash2.attack(m_facingDirection);break;
-                        case 3:slash3.attack(m_facingDirection);break;
+            //Hurt
+            if (Input.GetKeyDown("q") && !m_rolling){
+                damage(1);
+            }
+
+            // -- Handle input and movement --
+            
+            if (controlEnabled){
+                // Swap direction of sprite depending on walk direction
+                float inputX = Input.GetAxis("Horizontal");
+                if (inputX > 0){
+                    GetComponent<SpriteRenderer>().flipX = false;
+                    m_facingDirection = 1;
+                }else if (inputX < 0){
+                    GetComponent<SpriteRenderer>().flipX = true;
+                    m_facingDirection = -1;
+                }
+                // Move
+                if (!m_rolling){
+                    m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
+                    // Roll
+                    if (Input.GetKeyDown("left shift") && !m_isWallSliding)
+                    {
+                        m_rolling = true;
+                        m_animator.SetTrigger("Roll");
+                        m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
                     }
-                    // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-                    m_animator.SetTrigger("Attack" + m_currentAttack);
+                    //Jump
+                    else if (Input.GetKeyDown("space") && m_grounded){
+                        m_animator.SetTrigger("Jump");
+                        m_grounded = false;
+                        m_animator.SetBool("Grounded", m_grounded);
+                        m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
+                        m_groundSensor.Disable(0.2f);
+                    }
+                    //Attack
+                    else if(Input.GetMouseButtonDown(0) && m_timeSinceAttack > 0.25f)
+                    {
+                        m_currentAttack++;
 
-                    // Reset timer
-                    m_timeSinceAttack = 0.0f;
-                }
-                // Block
-                else if (Input.GetMouseButtonDown(1)){
-                    m_animator.SetTrigger("Block");
-                    m_animator.SetBool("IdleBlock", true);
-                }else if (Input.GetMouseButtonUp(1)){
-                    m_animator.SetBool("IdleBlock", false);
-                }
-                //Run
-                if (Mathf.Abs(inputX) > Mathf.Epsilon){
-                    // Reset timer
-                    m_delayToIdle = 0.05f;
-                    m_animator.SetInteger("AnimState", 1);
+                        // Loop back to one after third attack
+                        if (m_currentAttack > 3)
+                            m_currentAttack = 1;
+
+                        // Reset Attack combo if time since last attack is too large
+                        if (m_timeSinceAttack > 1.0f)
+                            m_currentAttack = 1;
+                        switch (m_currentAttack){
+                            case 1:slash1.attack(m_facingDirection);break;
+                            case 2:slash2.attack(m_facingDirection);break;
+                            case 3:slash3.attack(m_facingDirection);break;
+                        }
+                        // Call one of three attack animations "Attack1", "Attack2", "Attack3"
+                        m_animator.SetTrigger("Attack" + m_currentAttack);
+
+                        // Reset timer
+                        m_timeSinceAttack = 0.0f;
+                    }
+                    // Block
+                    else if (Input.GetMouseButtonDown(1)){
+                        m_animator.SetTrigger("Block");
+                        m_animator.SetBool("IdleBlock", true);
+                    }else if (Input.GetMouseButtonUp(1)){
+                        m_animator.SetBool("IdleBlock", false);
+                    }
+                    //Run
+                    if (Mathf.Abs(inputX) > Mathf.Epsilon){
+                        // Reset timer
+                        m_delayToIdle = 0.05f;
+                        m_animator.SetInteger("AnimState", 1);
+                    }
+                    //Idle
+                    else{
+                        // Prevents flickering transitions to idle
+                        m_delayToIdle -= Time.deltaTime;
+                            if(m_delayToIdle < 0)
+                                m_animator.SetInteger("AnimState", 0);
+                    }
                 }
                 //Idle
                 else{
@@ -160,16 +178,12 @@ public class HeroKnight : MonoBehaviour {
                             m_animator.SetInteger("AnimState", 0);
                 }
             }
-            //Idle
-            else{
-                // Prevents flickering transitions to idle
-                m_delayToIdle -= Time.deltaTime;
-                    if(m_delayToIdle < 0)
-                        m_animator.SetInteger("AnimState", 0);
+        }
+        else {
+            if (Input.GetKeyDown("space")){
+                respawn();
             }
         }
-        
-        
     }
 
     // Animation Events
@@ -195,10 +209,9 @@ public class HeroKnight : MonoBehaviour {
     void damage(int dmgAmnt){
         if (!invincible){
             health-=dmgAmnt;
-            hud.updateHealth();
             if (health>0){
                 StartCoroutine("iframes");
-            } else {
+            } else if (!died){
                 m_animator.SetBool("noBlood", m_noBlood);
                 m_animator.SetTrigger("Death");
             }
@@ -216,4 +229,31 @@ public class HeroKnight : MonoBehaviour {
         invincible = false;
         hud.changeInvincibleState(invincible);
     }
+
+    void respawn(){
+        m_animator.ResetTrigger("Death");
+        m_animator.SetTrigger("Respawn");
+        transform.position = lastCheckpointPos;
+        health = 10;
+        died = false;
+        controlEnabled = true;
+    }
+
+    void OnTriggerEnter2D(Collider2D trigger){
+        if (trigger.tag == "Checkpoint"){
+            lastCheckpointPos = trigger.transform.position;
+        }else if (trigger.tag == "Enemies"){
+            if (!died && !m_rolling){
+                damage(1);
+            }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other){
+        if (other.transform.tag == "Enemies"){
+            //Debug.Log("AAAAAAAAAAAAAAA");
+        }
+    }
+
+
 }
