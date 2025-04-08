@@ -7,7 +7,7 @@ public class Wpn_Attack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameObject.GetComponents<PolygonCollider2D>();
     }
 
     // Update is called once per frame
@@ -37,4 +37,15 @@ public class Wpn_Attack : MonoBehaviour
         }
         this.transform.gameObject.SetActive(false);
     }
+
+    void OnTriggerEnter2D(Collider2D other){
+        if (other.tag != "TerrainCollider"){
+            Debug.Log(other.gameObject.layer);
+            Debug.Log(other.tag);
+            if (other.transform.tag == "Enemies"){
+                Debug.Log("AAAAAAAAAAAAAAA");
+            }
+        }
+    }
+
 }

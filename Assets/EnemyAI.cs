@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     private Rigidbody2D self;
+    private Collider2D hitbox;
     private GenCollider colliderBLeft;
     private GenCollider colliderBRight;
     private GenCollider colliderTLeft;
@@ -13,6 +14,8 @@ public class EnemyAI : MonoBehaviour
     private bool Turn = false;
     private bool Turned = false;
     public float spd = 4.0f;
+    public int health = 3;
+    public bool invincible = false;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +30,9 @@ public class EnemyAI : MonoBehaviour
         } else {
             facing = -1;
         }
+
+        hitbox = gameObject.GetComponent<BoxCollider2D>();
+
     }
 
     // Update is called once per frame
@@ -49,5 +55,38 @@ public class EnemyAI : MonoBehaviour
             Turned = true;
         }
         self.velocity = new Vector2(facing * spd, self.velocity.y);
+
+        List<Collider2D> array = new List<Collider2D>();
+        hitbox.OverlapCollider(new ContactFilter2D().NoFilter(), array);
+        foreach (Collider2D collider in array){
+            if (collider.name == "HeroKnight" || collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3"){
+                Debug.Log(collider.name);
+            }
+            if (collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3"){
+                Damage(1);
+            }
+
+        }
+    }
+
+    public void Damage(int n){
+        if (!invincible){
+            health-=n;
+            if (health>0){
+                StartCoroutine("iframes");
+            } else {
+                transform.gameObject.SetActive(false);
+                //transform.gameObject.Destroy();
+            }
+        }
+    }
+
+    IEnumerator iframes(){
+        invincible = true;
+        int loopDuration = (int)Mathf.Round(1.0f/0.3f);
+        for (int i=0; i<loopDuration;i++){
+            yield return new WaitForSeconds(0.3f);
+        }
+        invincible = false;
     }
 }

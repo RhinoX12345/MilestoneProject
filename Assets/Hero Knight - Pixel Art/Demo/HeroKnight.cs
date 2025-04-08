@@ -32,7 +32,7 @@ public class HeroKnight : MonoBehaviour {
     public HudManager hud;
     public int health = 10;
     private bool died = false;
-    private bool invincible = false;
+    public bool invincible = false;
     public float invincibleTime = 1.0f;
     public bool controlEnabled = true;
     public Vector2 lastCheckpointPos = new Vector2(0,0);
@@ -240,18 +240,24 @@ public class HeroKnight : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D trigger){
+        //Debug.Log(trigger.gameObject.layer);
         if (trigger.tag == "Checkpoint"){
             lastCheckpointPos = trigger.transform.position;
-        }else if (trigger.tag == "Enemies"){
-            if (!died && !m_rolling){
-                damage(1);
+        }else if (trigger.gameObject.layer == 8){
+            if (trigger.tag == "Enemies"){
+                if (!died && !m_rolling){
+                    damage(1);
+                }
             }
         }
     }
 
     void OnCollisionEnter2D(Collision2D other){
-        if (other.transform.tag == "Enemies"){
-            //Debug.Log("AAAAAAAAAAAAAAA");
+        //Debug.Log(other.transform.gameObject.layer);
+        if (other.transform.gameObject.layer == 8){
+            if (other.transform.tag == "Enemies"){
+                Debug.Log("AAAAAAAAAAAAAAA");
+            }
         }
     }
 
