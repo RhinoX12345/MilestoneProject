@@ -34,12 +34,12 @@ public class HeroKnight : MonoBehaviour {
     private bool died = false;
     public bool invincible = false;
     public float invincibleTime = 1.0f;
+    public float knockback = 5.0f;
     public bool controlEnabled = true;
     public Vector2 lastCheckpointPos = new Vector2(0,0);
 
     // Use this for initialization
-    void Start ()
-    {
+    void Start (){
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
         m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
@@ -95,18 +95,23 @@ public class HeroKnight : MonoBehaviour {
             if (Input.GetKeyDown("q") && !m_rolling){
                 damage(1);
             }
+            if (Input.GetKeyDown("e") && !m_rolling){
+                damage(-1);
+            }
 
             // -- Handle input and movement --
             
             if (controlEnabled){
                 // Swap direction of sprite depending on walk direction
                 float inputX = Input.GetAxis("Horizontal");
-                if (inputX > 0){
-                    GetComponent<SpriteRenderer>().flipX = false;
-                    m_facingDirection = 1;
-                }else if (inputX < 0){
-                    GetComponent<SpriteRenderer>().flipX = true;
-                    m_facingDirection = -1;
+                if (m_animator.GetBool("Attacking")==false){
+                    if (inputX > 0){
+                        GetComponent<SpriteRenderer>().flipX = false;
+                        m_facingDirection = 1;
+                    }else if (inputX < 0){
+                        GetComponent<SpriteRenderer>().flipX = true;
+                        m_facingDirection = -1;
+                    }
                 }
                 // Move
                 if (!m_rolling){
@@ -129,6 +134,7 @@ public class HeroKnight : MonoBehaviour {
                     //Attack
                     else if(Input.GetMouseButtonDown(0) && m_timeSinceAttack > 0.25f)
                     {
+                        m_animator.SetBool("Attacking",true);
                         m_currentAttack++;
 
                         // Loop back to one after third attack
@@ -138,11 +144,23 @@ public class HeroKnight : MonoBehaviour {
                         // Reset Attack combo if time since last attack is too large
                         if (m_timeSinceAttack > 1.0f)
                             m_currentAttack = 1;
+                        float atkDur = 0;
                         switch (m_currentAttack){
-                            case 1:slash1.attack(m_facingDirection);break;
-                            case 2:slash2.attack(m_facingDirection);break;
-                            case 3:slash3.attack(m_facingDirection);break;
+                            case 1:
+                            slash1.attack(m_facingDirection);
+                            atkDur = slash1.atkDur;
+                            break;
+                            case 2:
+                            slash2.attack(m_facingDirection);
+                            atkDur = slash2.atkDur;
+                            break;
+                            case 3:
+                            slash3.attack(m_facingDirection);
+                            atkDur = slash3.atkDur;
+                            break;
                         }
+                        IEnumerator atkAnimation = attacking(atkDur);
+                        StartCoroutine(atkAnimation);
                         // Call one of three attack animations "Attack1", "Attack2", "Attack3"
                         m_animator.SetTrigger("Attack" + m_currentAttack);
 
@@ -205,6 +223,10 @@ public class HeroKnight : MonoBehaviour {
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
     }
+    IEnumerator attacking(float dur){
+        yield return new WaitForSeconds(dur);
+        m_animator.SetBool("Attacking", false);
+    }
 
     void damage(int dmgAmnt){
         if (!invincible){
@@ -218,8 +240,10 @@ public class HeroKnight : MonoBehaviour {
         }
     }
 
+
     IEnumerator iframes(){
         invincible = true;
+        StartCoroutine("stun");
         hud.changeInvincibleState(invincible);
         int loopDuration = (int)Mathf.Round(invincibleTime/0.3f);
         for (int i=0; i<loopDuration;i++){
@@ -228,6 +252,12 @@ public class HeroKnight : MonoBehaviour {
         }
         invincible = false;
         hud.changeInvincibleState(invincible);
+    }
+
+    IEnumerator stun(){
+        controlEnabled = false;
+        yield return new WaitForSeconds(0.2f);
+        controlEnabled = true;
     }
 
     void respawn(){
@@ -245,7 +275,8 @@ public class HeroKnight : MonoBehaviour {
             lastCheckpointPos = trigger.transform.position;
         }else if (trigger.gameObject.layer == 8){
             if (trigger.tag == "Enemies"){
-                if (!died && !m_rolling){
+                if (!died && !m_rolling && !invincible){
+                    m_body2d.velocity = new Vector2(Mathf.Sign(m_body2d.position.x - trigger.transform.parent.position.x)*knockback,m_body2d.velocity.y+1);
                     damage(1);
                 }
             }

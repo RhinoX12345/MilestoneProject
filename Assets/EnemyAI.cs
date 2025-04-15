@@ -16,6 +16,8 @@ public class EnemyAI : MonoBehaviour
     public float spd = 4.0f;
     public int health = 3;
     public bool invincible = false;
+    public float knockback = 5.0f;
+    public bool move = true;
 
     // Start is called before the first frame update
     void Start()
@@ -54,15 +56,19 @@ public class EnemyAI : MonoBehaviour
             Turn = false;
             Turned = true;
         }
-        self.velocity = new Vector2(facing * spd, self.velocity.y);
+        if (move){
+            self.velocity = new Vector2(facing * spd, self.velocity.y);
+        }
 
         List<Collider2D> array = new List<Collider2D>();
         hitbox.OverlapCollider(new ContactFilter2D().NoFilter(), array);
         foreach (Collider2D collider in array){
-            if (collider.name == "HeroKnight" || collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3"){
-                Debug.Log(collider.name);
-            }
-            if (collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3"){
+            //if (collider.name == "HeroKnight" || collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3"){
+            //    Debug.Log(collider.name);
+            //}
+            if ((collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3")&&!invincible){
+                StartCoroutine("stun");
+                self.velocity = new Vector2(Mathf.Sign(self.position.x - collider.transform.parent.position.x)*knockback,self.velocity.y+1);
                 Damage(1);
             }
 
@@ -82,11 +88,16 @@ public class EnemyAI : MonoBehaviour
     }
 
     IEnumerator iframes(){
+        Debug.Log("invincible");
         invincible = true;
-        int loopDuration = (int)Mathf.Round(1.0f/0.3f);
-        for (int i=0; i<loopDuration;i++){
-            yield return new WaitForSeconds(0.3f);
-        }
+        yield return new WaitForSeconds(0.3f);
         invincible = false;
+        Debug.Log("not invincible");
+    }
+
+    IEnumerator stun(){
+        move = false;
+        yield return new WaitForSeconds(0.2f);
+        move = true;
     }
 }

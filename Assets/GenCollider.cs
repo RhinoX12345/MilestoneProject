@@ -26,14 +26,14 @@ public class GenCollider : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag!="Player"){
+        if (other.tag=="Platform"){
             collisionCount++;
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag!="Player"){
+        if (other.tag=="Platform"){
             collisionCount--;
         }
     }
