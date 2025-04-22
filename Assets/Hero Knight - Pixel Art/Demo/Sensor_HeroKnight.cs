@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Sensor_HeroKnight : MonoBehaviour {
 
     private int m_ColCount = 0;
 
     private float m_DisableTimer;
-
     private void OnEnable()
     {
         m_ColCount = 0;
@@ -14,9 +15,17 @@ public class Sensor_HeroKnight : MonoBehaviour {
 
     public bool State()
     {
+        List<Collider2D> array = new List<Collider2D>();
+        gameObject.GetComponent<CircleCollider2D>().OverlapCollider(new ContactFilter2D().NoFilter(), array);
+        int a = 0;
+        foreach (Collider2D collider in array){
+            if (collider.tag == "Platform"){
+                a+=1;
+            }
+        }
         if (m_DisableTimer > 0)
             return false;
-        return m_ColCount > 0;
+        return a > 0;
     }
 
     void OnTriggerEnter2D(Collider2D other)

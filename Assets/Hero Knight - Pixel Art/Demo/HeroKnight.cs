@@ -15,7 +15,8 @@ public class HeroKnight : MonoBehaviour {
     private Sensor_HeroKnight   m_wallSensorR2;
     private Sensor_HeroKnight   m_wallSensorL1;
     private Sensor_HeroKnight   m_wallSensorL2;
-    private bool                m_isWallSliding = false;
+    private bool                m_isWallSliding1 = false;
+    private bool                m_isWallSliding2 = false;
     private bool                m_grounded = false;
     private bool                m_rolling = false;
     private int                 m_facingDirection = 1;
@@ -25,6 +26,7 @@ public class HeroKnight : MonoBehaviour {
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
     
+    public FollowPlayer Cam;
     private Wpn_Attack slash1;
     private Wpn_Attack slash2;
     private Wpn_Attack slash3;
@@ -37,6 +39,7 @@ public class HeroKnight : MonoBehaviour {
     public float knockback = 5.0f;
     public bool controlEnabled = true;
     public Vector2 lastCheckpointPos = new Vector2(0,0);
+    public float ySpd;
 
     // Use this for initialization
     void Start (){
@@ -83,12 +86,14 @@ public class HeroKnight : MonoBehaviour {
                 m_grounded = false;
                 m_animator.SetBool("Grounded", m_grounded);
             }
-
+            //Debug.Log(m_groundSensor.State());
+            ySpd = m_body2d.velocity.y;
             //Set AirSpeed in animator
             m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
             //Wall Slide
-            m_isWallSliding = (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State());
-            m_animator.SetBool("WallSlide", m_isWallSliding);
+            m_isWallSliding1 = m_wallSensorR1.State() && m_wallSensorR2.State();
+            m_isWallSliding1 = m_wallSensorL1.State() && m_wallSensorL2.State();
+            m_animator.SetBool("WallSlide", m_isWallSliding1||m_isWallSliding2);
             
 
             //Hurt
@@ -98,7 +103,9 @@ public class HeroKnight : MonoBehaviour {
             if (Input.GetKeyDown("e") && !m_rolling){
                 damage(-1);
             }
-
+            if (Input.GetKeyDown("r")){
+                respawn();
+            }
             // -- Handle input and movement --
             
             if (controlEnabled){
@@ -115,9 +122,12 @@ public class HeroKnight : MonoBehaviour {
                 }
                 // Move
                 if (!m_rolling){
-                    m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
+                    if (!m_isWallSliding1 && inputX<0)
+                        m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
+                    if (!m_isWallSliding2 && inputX>0)
+                        m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
                     // Roll
-                    if (Input.GetKeyDown("left shift") && !m_isWallSliding)
+                    if (Input.GetKeyDown("left shift") && !(m_isWallSliding1||m_isWallSliding2))
                     {
                         m_rolling = true;
                         m_animator.SetTrigger("Roll");
@@ -228,7 +238,7 @@ public class HeroKnight : MonoBehaviour {
         m_animator.SetBool("Attacking", false);
     }
 
-    void damage(int dmgAmnt){
+    public void damage(int dmgAmnt){
         if (!invincible){
             health-=dmgAmnt;
             if (health>0){
@@ -267,6 +277,7 @@ public class HeroKnight : MonoBehaviour {
         health = 10;
         died = false;
         controlEnabled = true;
+        Cam.reset();
     }
 
     void OnTriggerEnter2D(Collider2D trigger){

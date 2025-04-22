@@ -33,4 +33,8 @@ public class FollowPlayer : MonoBehaviour
         Vector3 target = new Vector3(targetX,playerY+OriginalOffset.y,this.transform.position.z);
         this.transform.position = Vector3.MoveTowards(this.transform.position, target, step);
     }
+
+    public void reset(){
+        gameObject.transform.position = new Vector3(player.transform.position.x+OriginalOffset.x,player.transform.position.y+OriginalOffset.y, gameObject.transform.position.z);
+    }
 }
