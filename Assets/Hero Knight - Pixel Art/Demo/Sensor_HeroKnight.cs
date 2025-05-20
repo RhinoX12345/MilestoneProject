@@ -16,7 +16,11 @@ public class Sensor_HeroKnight : MonoBehaviour {
     public bool State()
     {
         List<Collider2D> array = new List<Collider2D>();
-        gameObject.GetComponent<CircleCollider2D>().OverlapCollider(new ContactFilter2D().NoFilter(), array);
+        try{
+            gameObject.GetComponent<CircleCollider2D>().OverlapCollider(new ContactFilter2D().NoFilter(), array);
+        } catch {
+            gameObject.GetComponent<BoxCollider2D>().OverlapCollider(new ContactFilter2D().NoFilter(), array);
+        }
         int a = 0;
         foreach (Collider2D collider in array){
             if (collider.tag == "Platform"){

@@ -88,11 +88,9 @@ public class EnemyAI : MonoBehaviour
     }
 
     IEnumerator iframes(){
-        Debug.Log("invincible");
         invincible = true;
         yield return new WaitForSeconds(0.3f);
         invincible = false;
-        Debug.Log("not invincible");
     }
 
     IEnumerator stun(){

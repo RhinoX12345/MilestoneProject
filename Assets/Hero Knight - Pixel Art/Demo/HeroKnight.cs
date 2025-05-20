@@ -78,8 +78,9 @@ public class HeroKnight : MonoBehaviour {
         if(m_rolling)
             m_rollCurrentTime += Time.deltaTime;
         // Disable rolling if timer extends duration
-        if(m_rollCurrentTime > m_rollDuration)
+        if(m_rollCurrentTime > m_rollDuration){
             m_rolling = false;
+        }
         if (!died){
             //Check if character just landed on the ground
             if (!m_grounded && m_groundSensor.State())
@@ -100,6 +101,13 @@ public class HeroKnight : MonoBehaviour {
             //Wall Slide
             m_isWallTouchR = m_wallSensorR1.State() || m_wallSensorR2.State();
             m_isWallTouchL = m_wallSensorL1.State() || m_wallSensorL2.State();
+            if (m_isWallTouchL && !m_isWallTouchR){
+                m_facingDirection = 1;
+                GetComponent<SpriteRenderer>().flipX = true;
+            } else if (m_isWallTouchR && !m_isWallTouchL){
+                m_facingDirection = -1;
+                GetComponent<SpriteRenderer>().flipX = false;
+            }//////////////////////////////////////////////////////////Fix sprite direction when landing after wallsliding
             m_animator.SetBool("WallSlide", (m_isWallTouchR||m_isWallTouchL)&&!m_grounded);
             
 
@@ -142,22 +150,37 @@ public class HeroKnight : MonoBehaviour {
                     m_animator.SetTrigger("Jump");
                     m_body2d.velocity = new Vector2(m_body2d.velocity.x-m_jumpForce/2, m_jumpForce/2);
                     wallJumpTime = 0.2f;
-                    GetComponent<SpriteRenderer>().flipX = true;
-                    m_facingDirection = -1;
                 }
                 else if (Input.GetKeyDown("space") && m_isWallTouchL && !m_grounded){
                     m_animator.SetTrigger("Jump");
                     m_body2d.velocity = new Vector2(m_body2d.velocity.x+m_jumpForce/2, m_jumpForce/2);
                     wallJumpTime = 0.2f;
-                    GetComponent<SpriteRenderer>().flipX = false;
-                    m_facingDirection = 1;
                 }
                 // Move
                 if (!m_rolling){
-                    if (!m_isWallTouchL && inputX<0 && wallJumpTime<=0.0f)
-                        m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
-                    if (!m_isWallTouchR && inputX>0 && wallJumpTime<=0.0f)
-                        m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
+                    if (m_grounded && inputX==0){
+                        m_body2d.velocity = new Vector2(0,0);
+                    }
+                    if (!m_isWallTouchL && inputX<0 && wallJumpTime<=0.0f){
+                        if (m_body2d.velocity.x>=-m_speed){
+                            m_body2d.velocity = new Vector2(
+                                Mathf.Max(m_body2d.velocity.x + inputX*m_speed*0.5f, inputX*m_speed), 
+                                m_body2d.velocity.y
+                                );
+                        } else {
+                            m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_body2d.velocity.y);
+                        }
+                    }
+                    if (!m_isWallTouchR && inputX>0 && wallJumpTime<=0.0f){
+                        if (m_body2d.velocity.x<=m_speed){
+                            m_body2d.velocity = new Vector2(
+                                Mathf.Min(m_body2d.velocity.x + inputX*m_speed*0.5f, inputX*m_speed), 
+                                m_body2d.velocity.y
+                                );
+                        } else {
+                            m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_body2d.velocity.y);
+                        }
+                    }
                     // Roll
                     if (Input.GetKeyDown("left shift"))
                     {

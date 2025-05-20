@@ -6,10 +6,12 @@ public class Wpn_Attack : MonoBehaviour
 {   
     public Collider2D collider;
     public float atkDur = 2.5f;
+    private Rigidbody2D player;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = transform.parent.gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -41,9 +43,10 @@ public class Wpn_Attack : MonoBehaviour
         if (other.tag != "TerrainCollider"){
             //Debug.Log(other.gameObject.layer);
             //Debug.Log(other.tag);
-            //if (other.transform.tag == "Enemies"){
-            //    Debug.Log("AAAAAAAAAAAAAAA");
-            //}
+            if (other.transform.tag == "Enemies"){
+                Debug.Log("push");
+                player.AddForce(new Vector2(Mathf.Sign(player.position.x - other.transform.position.x),0.1f)*3,ForceMode2D.Impulse);
+            }
         }
     }
 
