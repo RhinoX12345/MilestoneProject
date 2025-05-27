@@ -1,12 +1,14 @@
-﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Sensor_HeroKnight : MonoBehaviour {
-
+public class ExtendedGround_HeroKnight : MonoBehaviour
+{
     private int m_ColCount = 0;
 
     private float m_DisableTimer;
+    public bool grounded;
+    public Sensor_HeroKnight groundSensor;
     private void OnEnable()
     {
         m_ColCount = 0;
@@ -28,7 +30,7 @@ public class Sensor_HeroKnight : MonoBehaviour {
         }
         if (m_DisableTimer > 0)
             return false;
-        return a > 0;
+        return a > 0 && grounded;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -45,9 +47,37 @@ public class Sensor_HeroKnight : MonoBehaviour {
         }
     }
 
+    void Start()
+    {
+        grounded = State();
+    }
+
     void Update()
     {
         m_DisableTimer -= Time.deltaTime;
+        if (groundSensor.State() != grounded)
+        {
+            if (grounded) {
+                StartCoroutine("disableJump");
+            } else {
+                grounded = groundSensor.State();
+            }
+        }
+    }
+
+    IEnumerator disableJump() {
+        float totalTime = 0;
+        while (totalTime < 0.01f)
+        {
+            totalTime += Time.deltaTime;
+            Debug.Log(totalTime<0.01f);
+            if (State() == groundSensor.State())
+                Debug.Log(totalTime);
+                grounded = groundSensor.State();
+                yield break;
+        }
+        Debug.Log(totalTime);
+        grounded = false;
     }
 
     public void Disable(float duration)
