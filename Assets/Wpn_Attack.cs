@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Wpn_Attack : MonoBehaviour
 {   
-    public Collider2D collider;
+    private Collider2D atkCollider;
     public float atkDur = 2.5f;
     private Rigidbody2D player;
 
     // Start is called before the first frame update
     void Start()
     {
+        atkCollider = GetComponent<PolygonCollider2D>();
         player = transform.parent.gameObject.GetComponent<Rigidbody2D>();
     }
 
@@ -32,11 +33,11 @@ public class Wpn_Attack : MonoBehaviour
 
     IEnumerator colliderOn(){
         yield return new WaitForSeconds(0.1f);
-        collider.enabled = true;
+        atkCollider.enabled = true;
         for (int i=0; i<Mathf.Floor(atkDur/0.25f); i++){
             yield return new WaitForSeconds(0.25f);
         }
-        collider.enabled = false;
+        atkCollider.enabled = false;
     }
 
     void OnTriggerEnter2D(Collider2D other){

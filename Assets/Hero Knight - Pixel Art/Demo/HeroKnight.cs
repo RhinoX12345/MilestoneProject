@@ -11,17 +11,17 @@ public class HeroKnight : MonoBehaviour {
 
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
-    private Sensor_HeroKnight   m_groundSensor;
-    private ExtendedGround_HeroKnight   m_extendedGroundSensor;
+    private GroundSensor_HeroKnight   m_groundSensor;
     private Sensor_HeroKnight   m_wallSensorR1;
     private Sensor_HeroKnight   m_wallSensorR2;
     private Sensor_HeroKnight   m_wallSensorL1;
     private Sensor_HeroKnight   m_wallSensorL2;
     public bool                m_isWallTouchR = false;
     public bool                m_isWallTouchL = false;
-    public bool                m_grounded = false;
+    private bool                m_grounded = false;
+    private bool                m_coyote = false;
     private bool                m_rolling = false;
-    private int                 m_facingDirection = 1;
+    public int                 m_facingDirection = 1;
     private int                 m_currentAttack = 0;
     private float               m_timeSinceAttack = 0.0f;
     private float               m_delayToIdle = 0.0f;
@@ -49,8 +49,7 @@ public class HeroKnight : MonoBehaviour {
     void Start (){
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
-        m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
-        m_extendedGroundSensor = transform.Find("ExtendedGroundSensor").GetComponent<ExtendedGround_HeroKnight>();
+        m_groundSensor = transform.Find("GroundSensor").GetComponent<GroundSensor_HeroKnight>();
         m_wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
@@ -63,6 +62,10 @@ public class HeroKnight : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
+        //Background Texture, Enemy Sprite & multiple enemies
+
+
+
         hud.updateHealth();
         if (health <= 0){
             controlEnabled = false;
@@ -80,18 +83,22 @@ public class HeroKnight : MonoBehaviour {
         if(m_rolling)
             m_rollCurrentTime += Time.deltaTime;
         // Disable rolling if timer extends duration
-        if(m_rollCurrentTime > m_rollDuration){
+        if(m_rolling && m_rollCurrentTime > m_rollDuration){
+            if (m_grounded){
+                m_body2d.velocity = new Vector2(0,0);
+            }
             m_rolling = false;
         }
         if (!died){
             //Check if character just landed on the ground
-            if (!m_grounded && m_groundSensor.State())
+            if (!m_grounded && m_groundSensor.actualState())
             {
                 m_grounded = true;
+                m_coyote = true;
                 m_animator.SetBool("Grounded", m_grounded);
             }
             //Check if character just started falling
-            if (m_grounded && !m_groundSensor.State())
+            if (m_grounded && !m_groundSensor.actualState())
             {
                 m_grounded = false;
                 m_animator.SetBool("Grounded", m_grounded);
@@ -100,19 +107,8 @@ public class HeroKnight : MonoBehaviour {
             ySpd = m_body2d.velocity.y;
             //Set AirSpeed in animator
             m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
-            //Wall Slide
-            m_isWallTouchR = m_wallSensorR1.State() || m_wallSensorR2.State();
-            m_isWallTouchL = m_wallSensorL1.State() || m_wallSensorL2.State();
-            if (m_isWallTouchL && !m_isWallTouchR && !m_grounded){
-                m_facingDirection = 1;
-                GetComponent<SpriteRenderer>().flipX = true;
-            } else if (m_isWallTouchR && !m_isWallTouchL && !m_grounded){
-                m_facingDirection = -1;
-                GetComponent<SpriteRenderer>().flipX = false;
-            }
 
-            //////////////////////////////////////////////////////////Fix sprite direction when landing after wallsliding
-            //m_animator.SetBool("WallSlide", (m_isWallTouchR||m_isWallTouchL)&&!m_grounded);
+            m_animator.SetBool("WallSlide", (m_isWallTouchR||m_isWallTouchL)&&!m_grounded);
 
 
             //Hurt
@@ -131,6 +127,16 @@ public class HeroKnight : MonoBehaviour {
             if (controlEnabled){
                 // Swap direction of sprite depending on walk direction
                 float inputX = Input.GetAxis("Horizontal");
+                //Wall Slide
+                m_isWallTouchR = m_wallSensorR1.State() || m_wallSensorR2.State();
+                m_isWallTouchL = m_wallSensorL1.State() || m_wallSensorL2.State();
+                if (m_isWallTouchL && !m_isWallTouchR && !m_grounded && inputX>0){
+                    m_facingDirection = 1;
+                    GetComponent<SpriteRenderer>().flipX = true;
+                } else if (m_isWallTouchR && !m_isWallTouchL && !m_grounded && inputX<0){
+                    m_facingDirection = -1;
+                    GetComponent<SpriteRenderer>().flipX = false;
+                }
                 if (m_animator.GetBool("Attacking")==false && wallJumpTime<=0){
                     if (inputX > 0){
                         GetComponent<SpriteRenderer>().flipX = false;
@@ -143,30 +149,36 @@ public class HeroKnight : MonoBehaviour {
                 if (m_rolling  && !(m_isWallTouchR||m_isWallTouchL)){
                     m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
                 }
+
+
                 //Jump
-                if (Input.GetKeyDown("space") && (m_grounded || m_extendedGroundSensor.State())){
+                if (!m_grounded && m_coyote){
+                    m_coyote = m_groundSensor.State();
+                }
+                if (Input.GetKeyDown("space") && m_coyote){
                     m_animator.SetTrigger("Jump");
                     m_grounded = false;
+                    m_coyote = false;
                     m_animator.SetBool("Grounded", m_grounded);
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
+                    m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_body2d.velocity.y/2 + m_jumpForce);
                     m_groundSensor.Disable(0.2f);
-                    m_extendedGroundSensor.Disable(0.2f);
+                    if (m_rolling){
+                        m_rollCurrentTime = 0;
+                        m_rolling = false;
+                    }
                 }
                 else if (Input.GetKeyDown("space") && m_isWallTouchR && !m_grounded){
                     m_animator.SetTrigger("Jump");
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x-m_jumpForce/2, m_jumpForce/2);
+                    m_body2d.velocity = new Vector2(m_body2d.velocity.x-m_jumpForce/2, m_body2d.velocity.y/2 + m_jumpForce/2);
                     wallJumpTime = 0.2f;
                 }
                 else if (Input.GetKeyDown("space") && m_isWallTouchL && !m_grounded){
                     m_animator.SetTrigger("Jump");
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x+m_jumpForce/2, m_jumpForce/2);
+                    m_body2d.velocity = new Vector2(m_body2d.velocity.x+m_jumpForce/2, m_body2d.velocity.y/2 + m_jumpForce/2);
                     wallJumpTime = 0.2f;
                 }
                 // Move
                 if (!m_rolling){
-                    if (m_grounded && inputX==0){
-                        m_body2d.velocity = new Vector2(0,0);
-                    }
                     if (!m_isWallTouchL && inputX<0 && wallJumpTime<=0.0f){
                         if (m_body2d.velocity.x>=-m_speed){
                             m_body2d.velocity = new Vector2(

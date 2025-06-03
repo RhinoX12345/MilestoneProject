@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!60 &5029082805359261013
 PolygonCollider2D:
@@ -110,7 +110,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!60 &7064201857743900698
 PolygonCollider2D:
@@ -194,11 +194,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2709543125305524993}
-  - {fileID: 95625435298945633}
-  - {fileID: 4393510860592810054}
-  - {fileID: 7646082782773197330}
   - {fileID: 351674194244795142}
   - {fileID: 3233824457707053878}
+  - {fileID: 4393510860592810054}
+  - {fileID: 7646082782773197330}
   - {fileID: 9184973761840278646}
   - {fileID: 4689175380946379667}
   - {fileID: 1201762746068085584}
@@ -218,13 +217,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_speed: 4
-  m_jumpForce: 7.5
+  m_jumpForce: 7
   m_rollForce: 6
   m_noBlood: 0
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
   m_isWallTouchR: 0
   m_isWallTouchL: 0
-  m_grounded: 0
   Cam: {fileID: 0}
   hud: {fileID: 0}
   health: 10
@@ -341,77 +339,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.69}
   m_Size: {x: 0.73, y: 1.26}
   m_Direction: 0
---- !u!1 &6596322023225146421
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 95625435298945633}
-  - component: {fileID: 3153888524239456190}
-  - component: {fileID: 3424316843340764712}
-  m_Layer: 8
-  m_Name: ExtendedGroundSensor
-  m_TagString: TerrainCollider
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &95625435298945633
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6596322023225146421}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.037, z: 0}
-  m_LocalScale: {x: 1.3275, y: 0.03797, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &3153888524239456190
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6596322023225146421}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.4714359}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 3.125, y: 1.71875}
-    newSize: {x: 2, y: 2}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.74, y: 1.5811284}
-  m_EdgeRadius: 0
---- !u!114 &3424316843340764712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6596322023225146421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1582bd76a388e7b4f8b9c8d67c4ecc94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundSensor: {fileID: 8844452520809865117}
 --- !u!1 &7087049454815086010
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +369,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1011138383611117998
 CircleCollider2D:
@@ -482,7 +409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2709543125305524993}
   - component: {fileID: 6687214520429672359}
-  - component: {fileID: 8844452520809865117}
+  - component: {fileID: 5390372369353073099}
   m_Layer: 8
   m_Name: GroundSensor
   m_TagString: TerrainCollider
@@ -530,7 +457,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.74, y: 1.5811284}
   m_EdgeRadius: 0
---- !u!114 &8844452520809865117
+--- !u!114 &5390372369353073099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -539,9 +466,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7588428847135460390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f2a8bdc7f41b704693ad497097f30dc, type: 3}
+  m_Script: {fileID: 11500000, guid: 84848fae5c29986428cd0f93f1723db7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coyoteSetting: 0.2
+  coyote: 0
 --- !u!1 &7967423529762950208
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +501,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1306675150133841448
 CircleCollider2D:
@@ -632,7 +561,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &3960872287899394342
 CircleCollider2D:
@@ -692,7 +621,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!60 &9178605104151833064
 PolygonCollider2D:
@@ -771,7 +700,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8413529789942519730}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &5359120195630597513
 CircleCollider2D:
