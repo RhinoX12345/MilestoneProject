@@ -27,9 +27,12 @@ public class EnemyAI : MonoBehaviour
         colliderBRight = transform.Find("ColliderBR").GetComponent<GenCollider>();
         colliderTLeft = transform.Find("ColliderTL").GetComponent<GenCollider>();
         colliderTRight = transform.Find("ColliderTR").GetComponent<GenCollider>();
-        if (Random.value < 0.5f){
+        if (Random.value < 0.5f)
+        {
             facing = 1;
-        } else {
+        }
+        else
+        {
             facing = -1;
         }
 
@@ -40,60 +43,95 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Turned){
-            Turned = colliderBRight.returnColliding()!=colliderBLeft.returnColliding();
+        if (Turned) {
+            Turned = colliderBRight.returnColliding() != colliderBLeft.returnColliding();
         } else {
-            if (colliderBRight.returnColliding()!=colliderBLeft.returnColliding()){
+            if (colliderBRight.returnColliding() != colliderBLeft.returnColliding()) {
                 //Debug.Log("Bottom");
                 Turn = true;
-            } else if (colliderTRight.returnColliding()!=colliderTLeft.returnColliding()) {
+            } else if (colliderTRight.returnColliding() != colliderTLeft.returnColliding()) {
                 //Debug.Log("Top");
                 Turn = true;
             }
         }
-        if (Turn){
-            facing*=-1;
+        //if (!Turned) {
+        //    if (facing == 1)
+        //    {
+        //        if (colliderBRight.returnColNum() < colliderBLeft.returnColNum())
+        //        {
+        //            Turn = true;
+        //        }
+        //        if (colliderTRight.returnColNum() > colliderTLeft.returnColNum())
+        //        {
+        //            Turn = true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (colliderBRight.returnColNum() > colliderBLeft.returnColNum())
+        //        {
+        //            Turn = true;
+        //        }
+        //        if (colliderTRight.returnColNum() < colliderTLeft.returnColNum())
+        //        {
+        //            Turn = true;
+        //        }
+        //    }
+        //}
+        if (Turn)
+        {
+            facing *= -1;
             Turn = false;
             Turned = true;
         }
-        if (move){
+        if (move)
+        {
             self.velocity = new Vector2(facing * spd, self.velocity.y);
         }
 
         List<Collider2D> array = new List<Collider2D>();
         hitbox.OverlapCollider(new ContactFilter2D().NoFilter(), array);
-        foreach (Collider2D collider in array){
+        foreach (Collider2D collider in array)
+        {
             //if (collider.name == "HeroKnight" || collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3"){
             //    Debug.Log(collider.name);
             //}
-            if ((collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3")&&!invincible){
+            if ((collider.name == "Slash_1" || collider.name == "Slash_2" || collider.name == "Slash_3") && !invincible)
+            {
                 StartCoroutine("stun");
-                self.velocity = new Vector2(Mathf.Sign(self.position.x - collider.transform.parent.position.x)*knockback,self.velocity.y+1);
+                self.velocity = new Vector2(Mathf.Sign(self.position.x - collider.transform.parent.position.x) * knockback, self.velocity.y + 0.1f);
                 Damage(1);
             }
 
         }
     }
 
-    public void Damage(int n){
-        if (!invincible){
-            health-=n;
-            if (health>0){
+    public void Damage(int n)
+    {
+        if (!invincible)
+        {
+            health -= n;
+            if (health > 0)
+            {
                 StartCoroutine("iframes");
-            } else {
-                transform.gameObject.SetActive(false);
-                //transform.gameObject.Destroy();
+            }
+            else
+            {
+                Destroy(gameObject);
+                //transform.gameObject.SetActive(false);
             }
         }
     }
 
-    IEnumerator iframes(){
+    IEnumerator iframes()
+    {
         invincible = true;
         yield return new WaitForSeconds(0.3f);
         invincible = false;
     }
 
-    IEnumerator stun(){
+    IEnumerator stun()
+    {
         move = false;
         yield return new WaitForSeconds(0.2f);
         move = true;

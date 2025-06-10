@@ -160,7 +160,7 @@ public class HeroKnight : MonoBehaviour {
                     m_grounded = false;
                     m_coyote = false;
                     m_animator.SetBool("Grounded", m_grounded);
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_body2d.velocity.y/2 + m_jumpForce);
+                    m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_body2d.velocity.y/3 + m_jumpForce);
                     m_groundSensor.Disable(0.2f);
                     if (m_rolling){
                         m_rollCurrentTime = 0;
@@ -169,7 +169,7 @@ public class HeroKnight : MonoBehaviour {
                 }
                 else if (Input.GetKeyDown("space") && m_isWallTouchR && !m_grounded){
                     m_animator.SetTrigger("Jump");
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x-m_jumpForce/2, m_body2d.velocity.y/2 + m_jumpForce/2);
+                    m_body2d.velocity = new Vector2(m_body2d.velocity.x-m_jumpForce/2, m_body2d.velocity.y/3 + m_jumpForce/2);
                     wallJumpTime = 0.2f;
                 }
                 else if (Input.GetKeyDown("space") && m_isWallTouchL && !m_grounded){
