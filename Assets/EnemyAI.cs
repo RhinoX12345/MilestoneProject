@@ -27,15 +27,7 @@ public class EnemyAI : MonoBehaviour
         colliderBRight = transform.Find("ColliderBR").GetComponent<GenCollider>();
         colliderTLeft = transform.Find("ColliderTL").GetComponent<GenCollider>();
         colliderTRight = transform.Find("ColliderTR").GetComponent<GenCollider>();
-        if (Random.value < 0.5f)
-        {
-            facing = 1;
-        }
-        else
-        {
-            facing = -1;
-        }
-
+        if (Random.value < 0.5f) { facing = 1; } else { facing = -1; }
         hitbox = gameObject.GetComponent<BoxCollider2D>();
 
     }
@@ -43,41 +35,40 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Turned) {
+        if (transform.position.y < -1000)
+        {
+            Damage(99999);
+        }
+
+        if (Turned)
+        {
             Turned = colliderBRight.returnColliding() != colliderBLeft.returnColliding();
-        } else {
-            if (colliderBRight.returnColliding() != colliderBLeft.returnColliding()) {
-                //Debug.Log("Bottom");
-                Turn = true;
-            } else if (colliderTRight.returnColliding() != colliderTLeft.returnColliding()) {
-                //Debug.Log("Top");
-                Turn = true;
+        }
+        else
+        {
+            if (facing == 1)
+            {
+                if (!colliderBRight.returnColliding() && colliderBLeft.returnColliding())
+                {
+                    Turn = true;
+                }
+                else if (colliderTRight.returnColliding() && !colliderTLeft.returnColliding())
+                {
+                    Turn = true;
+                }
+            }
+            else
+            {
+                if (colliderBRight.returnColliding() && !colliderBLeft.returnColliding())
+                {
+                    Turn = true;
+                }
+                else if (!colliderTRight.returnColliding() && colliderTLeft.returnColliding())
+                {
+                    Turn = true;
+                }
             }
         }
-        //if (!Turned) {
-        //    if (facing == 1)
-        //    {
-        //        if (colliderBRight.returnColNum() < colliderBLeft.returnColNum())
-        //        {
-        //            Turn = true;
-        //        }
-        //        if (colliderTRight.returnColNum() > colliderTLeft.returnColNum())
-        //        {
-        //            Turn = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (colliderBRight.returnColNum() > colliderBLeft.returnColNum())
-        //        {
-        //            Turn = true;
-        //        }
-        //        if (colliderTRight.returnColNum() < colliderTLeft.returnColNum())
-        //        {
-        //            Turn = true;
-        //        }
-        //    }
-        //}
         if (Turn)
         {
             facing *= -1;
@@ -102,7 +93,6 @@ public class EnemyAI : MonoBehaviour
                 self.velocity = new Vector2(Mathf.Sign(self.position.x - collider.transform.parent.position.x) * knockback, self.velocity.y + 0.1f);
                 Damage(1);
             }
-
         }
     }
 

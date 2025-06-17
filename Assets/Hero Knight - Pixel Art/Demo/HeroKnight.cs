@@ -348,8 +348,11 @@ public class HeroKnight : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D trigger){
         //Debug.Log(trigger.gameObject.layer);
-        if (trigger.tag == "Checkpoint"){
+        if (trigger.tag == "Checkpoint") {
             lastCheckpointPos = trigger.transform.position;
+            
+        } else if (trigger.tag == "Finish"){
+            Debug.Log("Finish");
         }else if (trigger.gameObject.layer == 8){
             if (trigger.tag == "Enemies"){
                 if (!died && !m_rolling && !invincible){

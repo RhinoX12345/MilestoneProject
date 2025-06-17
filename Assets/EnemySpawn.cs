@@ -9,6 +9,7 @@ public class EnemySpawn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Random.InitState(123123);
         spawners = GameObject.FindGameObjectsWithTag("EnemySpawner");
         foreach (GameObject spawner in spawners) {
             Instantiate(enemy, spawner.transform);
@@ -18,7 +19,7 @@ public class EnemySpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("s")){
+        if (Input.GetKeyDown("m")){
             spawners = GameObject.FindGameObjectsWithTag("EnemySpawner");
             foreach (GameObject spawner in spawners) {
                 Instantiate(enemy, spawner.transform);

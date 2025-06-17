@@ -70,7 +70,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4a06626059a3d438ac54c9b7f55bc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionCount: 0
 --- !u!1 &3245357616169746460
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4a06626059a3d438ac54c9b7f55bc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionCount: 0
 --- !u!1 &5777598344639308410
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,9 +346,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 065be6e9c28365c4f86dc9543ca9761c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  facing: 0
   spd: 2.5
-  health: 12
+  health: 3
   invincible: 0
   knockback: 5
   move: 1
@@ -424,7 +421,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4a06626059a3d438ac54c9b7f55bc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionCount: 0
 --- !u!1 &9060796964856450121
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,4 +491,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4a06626059a3d438ac54c9b7f55bc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionCount: 0

@@ -20,8 +20,10 @@ public class MovingDeath : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other){
         if (other.transform.tag == "Player"){
-            Debug.Log("AAAAAAAAaa");
-            playerScript.damage(9999);
+            playerScript.damage(99999);
+        }
+        if (other.transform.tag == "Enemies"){
+            other.gameObject.GetComponent<EnemyAI>().Damage(99999);
         }
     }
 }
