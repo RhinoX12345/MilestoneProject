@@ -5,7 +5,7 @@ using UnityEngine;
 public class GroundSensor_HeroKnight : MonoBehaviour
 {
     private int m_ColCount = 0;
-    public float coyoteSetting = 0.5f;
+    public float coyoteSetting = 0.2f;
     public float coyote = 0;
 
     private float m_DisableTimer;
