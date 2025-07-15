@@ -195,13 +195,15 @@ public class HeroKnight : MonoBehaviour
                 else if (Input.GetKeyDown("space") && m_isWallTouchR && !m_grounded && !m_rolling)
                 {
                     m_animator.SetTrigger("Jump");
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x - m_jumpForce / 2, m_body2d.velocity.y / 3 + m_jumpForce / 2);
+                    // m_body2d.velocity = new Vector2(m_body2d.velocity.x - m_jumpForce / 2, m_body2d.velocity.y / 3 + m_jumpForce / 2);
+                    m_body2d.velocity = new Vector2(m_body2d.velocity.x - m_jumpForce*2/3, m_jumpForce*2/3);
                     wallJumpTime = 0.2f;
                 }
                 else if (Input.GetKeyDown("space") && m_isWallTouchL && !m_grounded && !m_rolling)
                 {
                     m_animator.SetTrigger("Jump");
-                    m_body2d.velocity = new Vector2(m_body2d.velocity.x + m_jumpForce / 2, m_body2d.velocity.y / 2 + m_jumpForce / 2);
+                    // m_body2d.velocity = new Vector2(m_body2d.velocity.x + m_jumpForce / 2, m_body2d.velocity.y / 2 + m_jumpForce / 2);
+                    m_body2d.velocity = new Vector2(m_body2d.velocity.x + m_jumpForce*2/3, m_jumpForce*2/3);
                     wallJumpTime = 0.2f;
                 }
                 // Move
