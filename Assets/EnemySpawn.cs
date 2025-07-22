@@ -12,7 +12,8 @@ public class EnemySpawn : MonoBehaviour
         Random.InitState(123123);
         spawners = GameObject.FindGameObjectsWithTag("EnemySpawner");
         foreach (GameObject spawner in spawners) {
-            Instantiate(enemy, spawner.transform);
+            GameObject obj = spawner.GetComponent<SpawnObject>().obj;
+            Instantiate(obj, spawner.transform);
         }
     }
 
@@ -22,7 +23,8 @@ public class EnemySpawn : MonoBehaviour
         if (Input.GetKeyDown("m")){
             spawners = GameObject.FindGameObjectsWithTag("EnemySpawner");
             foreach (GameObject spawner in spawners) {
-                Instantiate(enemy, spawner.transform);
+                GameObject obj = spawner.GetComponent<SpawnObject>().obj;
+                Instantiate(obj, spawner.transform);
             }
         }
     }

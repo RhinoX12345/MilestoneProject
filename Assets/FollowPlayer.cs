@@ -65,7 +65,7 @@ public class FollowPlayer : MonoBehaviour
         Vector2 camPos = new Vector2(transform.position.x, transform.position.y);
         Vector2 playerPos = new Vector2(player.transform.position.x + OriginalOffset.x, player.transform.position.y + OriginalOffset.y);
         Vector2 newPos = Vector2.Lerp(camPos, playerPos, 0.2f);
-        Debug.Log(newPos);
+        // Debug.Log(newPos);
         transform.position = new Vector3(newPos.x, newPos.y, transform.position.z);
     }
 
