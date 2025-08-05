@@ -22,8 +22,15 @@ public class MovingDeath : MonoBehaviour
         if (other.transform.tag == "Player"){
             playerScript.damage(99999);
         }
-        if (other.transform.tag == "Enemies"){
-            other.gameObject.GetComponent<EnemyAI>().Damage(99999);
+        if (other.transform.tag == "Enemies") {
+            try
+            {
+                other.gameObject.GetComponent<EnemyAI>().Damage(99999);
+            }
+            catch
+            {
+                
+            }
         }
     }
 }

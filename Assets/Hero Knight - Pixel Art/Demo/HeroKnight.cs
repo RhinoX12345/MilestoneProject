@@ -21,7 +21,7 @@ public class HeroKnight : MonoBehaviour
     public bool m_isWallTouchL = false;
     private bool m_grounded = false;
     private bool m_coyote = false;
-    private bool m_rolling = false;
+    public bool m_rolling = false;
     public int m_facingDirection = 1;
     private int m_currentAttack = 0;
     private float m_timeSinceAttack = 0.0f;
@@ -89,6 +89,7 @@ public class HeroKnight : MonoBehaviour
                 m_body2d.velocity = new Vector2(0, 0);
             }
             m_rolling = false;
+            invincible = false;
         }
         if (!died)
         {
@@ -189,6 +190,7 @@ public class HeroKnight : MonoBehaviour
                     {
                         m_rollCurrentTime = 0;
                         m_rolling = false;
+                        invincible = false;
                     }
                 }
                 //Walljump
@@ -241,6 +243,7 @@ public class HeroKnight : MonoBehaviour
                     if (Input.GetKeyDown("left shift"))
                     {
                         m_rolling = true;
+                        invincible = true;
                         m_rollCurrentTime = 0.0f;
                         m_animator.SetTrigger("Roll");
                         m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, Mathf.Min(0.1f, m_body2d.velocity.y));
@@ -405,10 +408,11 @@ public class HeroKnight : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D trigger)
     {
+        Vector2 save = trigger.transform.position;
         //Debug.Log(trigger.gameObject.layer);
         if (trigger.tag == "Checkpoint")
         {
-            lastCheckpointPos = trigger.transform.position;
+            lastCheckpointPos = save;
 
         }
         else if (trigger.tag == "Finish")
@@ -421,7 +425,8 @@ public class HeroKnight : MonoBehaviour
             {
                 if (!died && !m_rolling && !invincible)
                 {
-                    m_body2d.velocity = new Vector2(Mathf.Sign(m_body2d.position.x - trigger.transform.parent.position.x) * knockback, m_body2d.velocity.y + 1);
+                    // m_body2d.velocity = new Vector2(Mathf.Sign(m_body2d.position.x - trigger.transform.parent.position.x) * knockback, m_body2d.velocity.y + 1);
+                    m_body2d.velocity = new Vector2(Mathf.Sign(m_body2d.position.x - save.x) * knockback, m_body2d.velocity.y + 1);
                     damage(1);
                 }
             }
@@ -435,6 +440,7 @@ public class HeroKnight : MonoBehaviour
         {
             if (other.transform.tag == "Enemies")
             {
+                damage(1);
                 Debug.Log("AAAAAAAAAAAAAAA");
             }
         }
